@@ -8,6 +8,8 @@ private:
     double movimientoX;
     double movimientoY;
     double velocidadVertical;
+    double gravedad;
+    bool enSuelo;
 
 public:
     Crash();
@@ -17,7 +19,10 @@ public:
     void bajar (int num);
     void velocidadY(int num);
     void mostrarestado();
-
+    void actualizarvelocidad(double tiempo);
+    void actualizarPosicion(double tiempo);
+    void verificarSuelo();
+    void saltar();
 
 };
 

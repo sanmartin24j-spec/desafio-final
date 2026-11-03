@@ -6,13 +6,27 @@ int main()
 {
     Crash crash;
 
-    crash.movimientoderecha(5);
-    crash.movimientoizquierda(2);
-    crash.subir(5);
-    crash.bajar(3);
-    crash.velocidadY(-10);
+    crash.saltar();
+    crash.saltar();
 
-    crash.mostrarestado();
+    for (int i = 0; i < 5; i++)
+    {
+        crash.actualizarPosicion(0.5);
+        crash.actualizarvelocidad(0.5);
+        crash.verificarSuelo();
+        crash.mostrarestado();
+    }
+
+    crash.saltar();
+
+    for (int i = 0; i < 5; i++)
+    {
+        crash.actualizarPosicion(0.5);
+        crash.actualizarvelocidad(0.5);
+        crash.verificarSuelo();
+        crash.mostrarestado();
+    }
+
 
 
     return 0;
