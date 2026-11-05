@@ -1,6 +1,8 @@
 #ifndef CRASH_H
 #define CRASH_H
 
+#include "plataforma.h"
+
 class Crash
 {
 private:
@@ -23,6 +25,8 @@ public:
     void actualizarPosicion(double tiempo);
     void verificarSuelo();
     void saltar();
+    void actualizarFisica(double tiempo);
+    bool aterrizarEnPlataforma(const Plataforma& plataforma, double posicionAnteriorY);
 
 };
 

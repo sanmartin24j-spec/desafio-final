@@ -4,6 +4,7 @@ using namespace std;
 
 int main()
 {
+    /*
     Crash crash;
 
     crash.saltar();
@@ -26,6 +27,15 @@ int main()
         crash.verificarSuelo();
         crash.mostrarestado();
     }
+    */
+
+    Plataforma plataforma1(0, -3, 10, 1);
+
+    cout << "Plataforma creada" << endl;
+    cout << "X: " << plataforma1.getX() << endl;
+    cout << "Y: " << plataforma1.getY() << endl;
+    cout << "Ancho: " << plataforma1.getAncho() << endl;
+    cout << "Alto: " << plataforma1.getAlto() << endl;
 
 
 

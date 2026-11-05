@@ -67,6 +67,18 @@ void Crash::saltar()
     }
 }
 
+void Crash::actualizarFisica(double tiempo)
+{
+    if (!enSuelo)
+    {
+        double posicionAnteriorY = movimientoY;
+
+        actualizarPosicion(tiempo);
+        actualizarvelocidad(tiempo);
+        verificarSuelo();
+    }
+}
+
 
 void Crash::mostrarestado()
 {
@@ -74,4 +86,27 @@ void Crash::mostrarestado()
     cout<<"Posición Y: "<<movimientoY<<endl;
     cout<<"velocidad en Y: "<<velocidadVertical<<endl;
     cout<<"vidas: "<<vidas<<endl;
+}
+
+bool Crash::aterrizarEnPlataforma(
+    const Plataforma& plataforma,
+    double posicionAnteriorY)
+{
+    bool dentroX =
+        movimientoX >= plataforma.getX() &&
+        movimientoX <= plataforma.getX() + plataforma.getAncho();
+
+    bool cruzoSuperficie =
+        posicionAnteriorY <= plataforma.getY() &&
+        movimientoY >= plataforma.getY();
+
+    if (dentroX && cruzoSuperficie && velocidadVertical > 0)
+    {
+        movimientoY = plataforma.getY();
+        velocidadVertical = 0;
+        enSuelo = true;
+        return true;
+    }
+
+    return false;
 }

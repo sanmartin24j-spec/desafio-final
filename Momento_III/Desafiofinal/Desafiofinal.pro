@@ -5,7 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         crash.cpp \
-        main.cpp
+        main.cpp \
+        plataforma.cpp
 
 HEADERS += \
-    crash.h
+    crash.h \
+    plataforma.h
