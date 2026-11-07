@@ -67,7 +67,7 @@ void Crash::saltar()
     }
 }
 
-void Crash::actualizarFisica(double tiempo)
+void Crash::actualizarFisica(double tiempo, const Plataforma& plataforma)
 {
     if (!enSuelo)
     {
@@ -75,10 +75,15 @@ void Crash::actualizarFisica(double tiempo)
 
         actualizarPosicion(tiempo);
         actualizarvelocidad(tiempo);
-        verificarSuelo();
+
+        bool aterrizo = aterrizarEnPlataforma(plataforma, posicionAnteriorY);
+
+        if (!aterrizo)
+        {
+            verificarSuelo();
+        }
     }
 }
-
 
 void Crash::mostrarestado()
 {
@@ -109,4 +114,60 @@ bool Crash::aterrizarEnPlataforma(
     }
 
     return false;
+}
+
+void Crash::verificarApoyo(const Plataforma& plataforma)
+{
+    bool dentroX =
+        movimientoX >= plataforma.getX() &&
+        movimientoX <= plataforma.getX() + plataforma.getAncho();
+
+    bool sobrePlataforma =
+        movimientoY == plataforma.getY();
+
+    if (enSuelo && sobrePlataforma && !dentroX)
+    {
+        enSuelo = false;
+    }
+}
+
+double Crash::getX() const
+{
+    return movimientoX;
+}
+
+double Crash::getY() const
+{
+    return movimientoY;
+}
+
+int Crash::getVidas() const
+{
+    return vidas;
+}
+
+void Crash::perderVida()
+{
+    if (vidas > 0)
+    {
+        vidas--;
+
+        if (vidas > 0)
+        {
+            reiniciarPosicion();
+        }
+    }
+}
+
+void Crash::reiniciarPosicion()
+{
+    movimientoX = 0;
+    movimientoY = 0;
+    velocidadVertical = 0;
+    enSuelo = true;
+}
+
+bool Crash::estaVivo() const
+{
+    return vidas > 0;
 }

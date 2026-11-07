@@ -25,8 +25,15 @@ public:
     void actualizarPosicion(double tiempo);
     void verificarSuelo();
     void saltar();
-    void actualizarFisica(double tiempo);
+    void actualizarFisica(double tiempo, const Plataforma& plataforma);
     bool aterrizarEnPlataforma(const Plataforma& plataforma, double posicionAnteriorY);
+    void verificarApoyo(const Plataforma& plataforma);
+    double getX() const;
+    double getY() const;
+    int getVidas() const;
+    void perderVida();
+    void reiniciarPosicion();
+    bool estaVivo() const;
 
 };
 

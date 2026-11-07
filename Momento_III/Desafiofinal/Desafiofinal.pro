@@ -6,8 +6,12 @@ CONFIG -= qt
 SOURCES += \
         crash.cpp \
         main.cpp \
-        plataforma.cpp
+        obstaculo.cpp \
+        plataforma.cpp \
+        residuo.cpp
 
 HEADERS += \
     crash.h \
-    plataforma.h
+    obstaculo.h \
+    plataforma.h \
+    residuo.h
