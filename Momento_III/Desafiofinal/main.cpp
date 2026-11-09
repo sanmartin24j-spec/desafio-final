@@ -3,6 +3,7 @@
 #include "plataforma.h"
 #include "obstaculo.h"
 #include "residuo.h"
+#include "nivelrio.h"
 using namespace std;
 
 int main()
@@ -121,6 +122,8 @@ int main()
     }
 */
 
+    /*
+
     Crash crash;
     Residuo residuo1(5, -20, 10);
 
@@ -142,6 +145,32 @@ int main()
             crash.mostrarestado();
         }
     }
+*/
+
+/*
+    NivelRio nivel1;
+
+    nivel1.iniciar();
+
+    for (int i = 0; i < 5; i++)
+    {
+        nivel1.actualizar(0.5);
+    }
+*/
+    NivelRio nivel1;
+
+    nivel1.iniciar();
+
+    nivel1.getCrash().movimientoderecha(5);
+
+    for (int i = 0; i < 5; i++)
+    {
+        nivel1.actualizar(0.5);
+        nivel1.mostrarEstado();
+
+        cout << "--------------------" << endl;
+    }
+
 
     return 0;
 }
