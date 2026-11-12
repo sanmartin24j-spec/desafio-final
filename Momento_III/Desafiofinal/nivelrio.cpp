@@ -7,7 +7,11 @@ NivelRio::NivelRio()
     crash(),
     plataforma1(0, -3, 10, 1),
     barrera(10, -2, 5, 1),
-    residuo1(5, -20, 10)
+    residuo1(5, -20, 10),
+    pieza1(2, 0),
+    pieza2(4, 0),
+    pieza3(6, 0),
+    piezasRecolectadas(0)
 {}
 void NivelRio::iniciar()
 {
@@ -53,4 +57,36 @@ void NivelRio::mostrarEstado() const
     std::cout << "Vidas: " << crash.getVidas() << std::endl;
     std::cout << "Barrera X: " << barrera.getX() << std::endl;
     std::cout << "Residuo Y: " << residuo1.getY() << std::endl;
+}
+
+void NivelRio::recogerPiezas()
+{
+    if (completado || !crash.estaVivo())
+    {
+        return;
+    }
+
+    if (pieza1.recoger(crash.getX(), crash.getY()))
+    {
+        piezasRecolectadas++;
+        std::cout << "Pieza 1 recogida" << std::endl;
+    }
+
+    if (pieza2.recoger(crash.getX(), crash.getY()))
+    {
+        piezasRecolectadas++;
+        std::cout << "Pieza 2 recogida" << std::endl;
+    }
+
+    if (pieza3.recoger(crash.getX(), crash.getY()))
+    {
+        piezasRecolectadas++;
+        std::cout << "Pieza 3 recogida" << std::endl;
+    }
+
+    if (piezasRecolectadas == 3)
+    {
+        completado = true;
+        std::cout << "NIVEL COMPLETADO" << std::endl;
+    }
 }

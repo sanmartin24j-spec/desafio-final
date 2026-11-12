@@ -9,6 +9,7 @@ SOURCES += \
         nivel.cpp \
         nivelrio.cpp \
         obstaculo.cpp \
+        pieza.cpp \
         plataforma.cpp \
         residuo.cpp
 
@@ -17,5 +18,6 @@ HEADERS += \
     nivel.h \
     nivelrio.h \
     obstaculo.h \
+    pieza.h \
     plataforma.h \
     residuo.h

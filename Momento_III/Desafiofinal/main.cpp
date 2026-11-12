@@ -4,6 +4,7 @@
 #include "obstaculo.h"
 #include "residuo.h"
 #include "nivelrio.h"
+#include "pieza.h"
 using namespace std;
 
 int main()
@@ -157,6 +158,8 @@ int main()
         nivel1.actualizar(0.5);
     }
 */
+
+    /*
     NivelRio nivel1;
 
     nivel1.iniciar();
@@ -170,7 +173,33 @@ int main()
 
         cout << "--------------------" << endl;
     }
+*/
 
+    /*
+    Pieza pieza1(5, 0);
 
+    cout << "Primer intento: "<< pieza1.recoger(5, 0) << endl;
+
+    cout << "Segundo intento: " << pieza1.recoger(5, 0) << endl;
+
+    cout << "Pieza recogida: "<< pieza1.estaRecogida() << endl;
     return 0;
+*/
+    NivelRio nivel1;
+    nivel1.iniciar();
+
+    nivel1.getCrash().movimientoderecha(2);
+    nivel1.recogerPiezas();
+
+    nivel1.getCrash().movimientoderecha(2);
+    nivel1.recogerPiezas();
+
+    nivel1.getCrash().movimientoderecha(2);
+    nivel1.recogerPiezas();
+
+    if (nivel1.estaCompletado())
+    {
+        cout << "Crash puede avanzar al Nivel 2" << endl;
+    }
+
 }

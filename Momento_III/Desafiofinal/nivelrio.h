@@ -6,6 +6,7 @@
 #include "plataforma.h"
 #include "obstaculo.h"
 #include "residuo.h"
+#include "pieza.h"
 
 class NivelRio : public Nivel
 {
@@ -16,6 +17,11 @@ private:
     Plataforma plataforma1;
     Obstaculo barrera;
     Residuo residuo1;
+    Pieza pieza1;
+    Pieza pieza2;
+    Pieza pieza3;
+    int piezasRecolectadas;
+
 
 public:
     NivelRio();
@@ -23,7 +29,7 @@ public:
     void iniciar() override;
     void actualizar(double tiempo) override;
     void mostrarEstado() const;
-
+    void recogerPiezas();
     Crash& getCrash();
 };
 
