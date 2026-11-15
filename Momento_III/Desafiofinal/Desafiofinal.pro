@@ -1,7 +1,9 @@
 TEMPLATE = app
-CONFIG += console c++17
+CONFIG += c++17
+CONFIG -= console
 CONFIG -= app_bundle
-CONFIG -= qt
+
+QT += core gui widgets
 
 SOURCES += \
         crash.cpp \
@@ -11,7 +13,8 @@ SOURCES += \
         obstaculo.cpp \
         pieza.cpp \
         plataforma.cpp \
-        residuo.cpp
+        residuo.cpp \
+        ventanajuego.cpp
 
 HEADERS += \
     crash.h \
@@ -20,4 +23,5 @@ HEADERS += \
     obstaculo.h \
     pieza.h \
     plataforma.h \
-    residuo.h
+    residuo.h \
+    ventanajuego.h
