@@ -31,6 +31,15 @@ public:
     void mostrarEstado() const;
     void recogerPiezas();
     Crash& getCrash();
+    double getBarreraX() const;
+    double getBarreraY() const;
+
+    double getResiduoX() const;
+    double getResiduoY() const;
+
+    void actualizarPeligros(double tiempo);
+    void recibirGolpe(bool golpeDeResiduo);
+
 };
 
 #endif // NIVELRIO_H

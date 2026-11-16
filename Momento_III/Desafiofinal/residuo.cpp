@@ -18,8 +18,7 @@ void Residuo::actualizar(double tiempo)
 
     if (posicionY >= 0)
     {
-        posicionY = 0;
-        velocidadVertical = 0;
+        reiniciar();
     }
 }
 

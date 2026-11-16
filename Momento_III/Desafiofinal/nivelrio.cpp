@@ -90,3 +90,50 @@ void NivelRio::recogerPiezas()
         std::cout << "NIVEL COMPLETADO" << std::endl;
     }
 }
+double NivelRio::getBarreraX() const
+{
+    return barrera.getX();
+}
+
+double NivelRio::getBarreraY() const
+{
+    return barrera.getY();
+}
+
+double NivelRio::getResiduoX() const
+{
+    return residuo1.getX();
+}
+
+double NivelRio::getResiduoY() const
+{
+    return residuo1.getY();
+}
+
+void NivelRio::actualizarPeligros(double tiempo)
+{
+    tiempoTranscurrido += tiempo;
+
+    barrera.actualizarMovimiento(tiempoTranscurrido);
+    residuo1.actualizar(tiempo);
+}
+
+void NivelRio::recibirGolpe(bool golpeDeResiduo)
+{
+    if (!crash.estaVivo() || completado)
+    {
+        return;
+    }
+
+    crash.perderVida();
+
+    if (golpeDeResiduo)
+    {
+        residuo1.reiniciar();
+    }
+
+    if (!crash.estaVivo())
+    {
+        std::cout << "GAME OVER" << std::endl;
+    }
+}
