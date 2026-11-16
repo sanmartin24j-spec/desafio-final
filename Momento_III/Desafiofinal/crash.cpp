@@ -171,3 +171,15 @@ bool Crash::estaVivo() const
 {
     return vidas > 0;
 }
+
+void Crash::limitarMovimiento(double minimoX, double maximoX)
+{
+    if (movimientoX < minimoX)
+    {
+        movimientoX = minimoX;
+    }
+    else if (movimientoX > maximoX)
+    {
+        movimientoX = maximoX;
+    }
+}

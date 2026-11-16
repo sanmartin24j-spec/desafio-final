@@ -17,6 +17,14 @@ protected:
         {
             crash->saltar();
         }
+        else if (evento->key() == Qt::Key_D)
+        {
+            crash->movimientoderecha(1);
+        }
+        else if (evento->key() == Qt::Key_A)
+        {
+            crash->movimientoizquierda(1);
+        }
 
         QGraphicsView::keyPressEvent(evento);
     }

@@ -34,6 +34,7 @@ public:
     void perderVida();
     void reiniciarPosicion();
     bool estaVivo() const;
+    void limitarMovimiento(double minimoX, double maximoX);
 
 };
 

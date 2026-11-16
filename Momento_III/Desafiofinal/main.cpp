@@ -61,18 +61,23 @@ int main(int argc, char *argv[])
     QTimer temporizador;
     temporizador.setInterval(50);
 
-    QObject::connect(&temporizador, &QTimer::timeout,
-    [&]()
-    {crash.actualizarFisica(0.05, plataforma1);
+    QObject::connect(&temporizador, &QTimer::timeout, [&]()
+    {
+
+    crash.limitarMovimiento(0, (640.0 - 24.0) / escala);
+
+
+    crash.verificarApoyo(plataforma1);
+
+
+    crash.actualizarFisica(0.05, plataforma1);
+
 
     crashGrafico->setPos(crash.getX() * escala,sueloY + crash.getY() * escala - 32);});
 
 
-
-
-
     temporizador.start();
+
 
     return aplicacion.exec();
 }
-
