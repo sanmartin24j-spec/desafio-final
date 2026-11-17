@@ -21,6 +21,8 @@ private:
     Pieza pieza2;
     Pieza pieza3;
     int piezasRecolectadas;
+    double maquinaX;
+    double maquinaY;
 
 
 public:
@@ -39,6 +41,16 @@ public:
 
     void actualizarPeligros(double tiempo);
     void recibirGolpe(bool golpeDeResiduo);
+
+    int getPiezasRecolectadas() const;
+
+    bool pieza1Recogida() const;
+    bool pieza2Recogida() const;
+    bool pieza3Recogida() const;
+    bool activarMaquina(bool cercaDeMaquina);
+
+    double getMaquinaX() const;
+    double getMaquinaY() const;
 
 };
 

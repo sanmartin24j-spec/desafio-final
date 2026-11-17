@@ -1,4 +1,4 @@
-
+#include <vector>
 #include <QApplication>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -13,6 +13,8 @@
 #include "ventanajuego.h"
 #include "nivelrio.h"
 #include <QGraphicsEllipseItem>
+#include <iostream>
+#include <QDebug>
 
 #include "crash.h"
 #include "plataforma.h"
@@ -25,7 +27,13 @@ int main(int argc, char *argv[])
     nivel1.iniciar();
 
     Crash& crash = nivel1.getCrash();
-    Plataforma plataforma1(0, -3, 10, 1);
+    std::vector<Plataforma> plataformas = {
+        Plataforma(0, 0, 7, 1),
+        Plataforma(12, 0, 8, 1),
+        Plataforma(4, -3, 7, 1),
+        Plataforma(13, -6, 7, 1),
+        Plataforma(5, -9, 7, 1)
+    };
 
     QGraphicsScene escena;
     escena.setSceneRect(0, 0, 640, 360);
@@ -34,12 +42,30 @@ int main(int argc, char *argv[])
     const double escala = 20.0;
     const double sueloY = 300.0;
 
-    escena.addRect(0, sueloY, 640, 25,QPen(Qt::NoPen), QBrush(QColor("#64748B")));
+    for (const Plataforma& plataforma : plataformas)
+    {
+        escena.addRect(
+            plataforma.getX() * escala,
+            sueloY + plataforma.getY() * escala,
+            plataforma.getAncho() * escala,
+            plataforma.getAlto() * escala,
+            QPen(Qt::NoPen),
+            QBrush(QColor("#16A085"))
+            );
+    }
 
 
-    escena.addRect(plataforma1.getX() * escala,sueloY + plataforma1.getY() * escala, plataforma1.getAncho() * escala,plataforma1.getAlto() * escala,QPen(Qt::NoPen),
-    QBrush(QColor("#16A085")));
-
+    for (const Plataforma& plataforma : plataformas)
+    {
+        escena.addRect(
+            plataforma.getX() * escala,
+            sueloY + plataforma.getY() * escala,
+            plataforma.getAncho() * escala,
+            plataforma.getAlto() * escala,
+            QPen(Qt::NoPen),
+            QBrush(QColor("#16A085"))
+            );
+    }
 
     QGraphicsRectItem *crashGrafico = escena.addRect(0, 0, 24, 32,QPen(Qt::NoPen),QBrush(QColor("#F28C28")));
 
@@ -59,8 +85,28 @@ int main(int argc, char *argv[])
     vidasTexto->setFont(QFont("Arial", 14, QFont::Bold));
     vidasTexto->setPos(490, 10);
 
+    QGraphicsTextItem *piezasTexto = escena.addText("PIEZAS: 0/3");
 
-    VentanaJuego vista(&escena, &crash);
+    piezasTexto->setDefaultTextColor(QColor("#B8860B"));
+    piezasTexto->setFont(QFont("Arial", 13, QFont::Bold));
+    piezasTexto->setPos(330, 10);
+
+    QGraphicsTextItem *victoriaTexto =
+        escena.addText("NIVEL 1 COMPLETADO");
+
+    victoriaTexto->setDefaultTextColor(QColor("#008000"));
+    victoriaTexto->setFont(QFont("Arial", 24, QFont::Bold));
+    victoriaTexto->setPos(145, 140);
+
+
+    victoriaTexto->setVisible(false);
+
+
+    victoriaTexto->setZValue(100);
+
+    QGraphicsRectItem *maquinaGrafica = escena.addRect( 0, 0, 40, 50,QPen(Qt::NoPen), QBrush(QColor("#475569")));
+
+    VentanaJuego vista(&escena, &crash, &nivel1,crashGrafico,maquinaGrafica,victoriaTexto);
     vista.setWindowTitle("Crash Bandicoot - Nivel 1");
     vista.setRenderHint(QPainter::Antialiasing);
     vista.setFixedSize(660, 380);
@@ -71,15 +117,45 @@ int main(int argc, char *argv[])
 
     QGraphicsEllipseItem *residuoGrafico = escena.addEllipse(0, 0, 18, 18,QPen(Qt::NoPen),QBrush(QColor("#8B5E3C")) );
 
+    QGraphicsEllipseItem *piezaGrafica1 = escena.addEllipse( 0, 0, 16, 16,QPen(Qt::NoPen), QBrush(QColor("#FFD700")));
+
+    QGraphicsEllipseItem *piezaGrafica2 = escena.addEllipse(0, 0, 16, 16,QPen(Qt::NoPen), QBrush(QColor("#FFD700")));
+
+    QGraphicsEllipseItem *piezaGrafica3 = escena.addEllipse(0, 0, 16, 16,QPen(Qt::NoPen), QBrush(QColor("#FFD700")));
+
+    // Las mismas posiciones definidas en NivelRio
+    piezaGrafica1->setPos(2 * escala, sueloY - 16);
+    piezaGrafica2->setPos(4 * escala, sueloY - 16);
+    piezaGrafica3->setPos(6 * escala, sueloY - 16);
+
     QTimer temporizador;
     temporizador.setInterval(50);
 
     QObject::connect(&temporizador, &QTimer::timeout,[&]()
     {
+    if (nivel1.estaCompletado() || !crash.estaVivo())
+    {
+        temporizador.stop();
+        return;
+    }
 
     crash.limitarMovimiento(0, (640.0 - 24.0) / escala);
-    crash.verificarApoyo(plataforma1);
-    crash.actualizarFisica(0.05, plataforma1);
+    crash.actualizarFisicaNivel(0.05, plataformas);
+
+    if (crash.getY() > 6 && crash.estaVivo())
+    {
+        std::cout << "Crash cayo al vacio" << std::endl;
+
+        nivel1.recibirGolpe(false);
+
+        std::cout << "Vidas restantes: "
+                  << crash.getVidas() << std::endl;
+    }
+
+    if (crash.getY() > 6 && crash.estaVivo())
+    {
+        nivel1.recibirGolpe(false);
+    }
 
 
     nivel1.actualizarPeligros(0.05);
@@ -94,6 +170,25 @@ int main(int argc, char *argv[])
     bool golpeResiduo =residuoGrafico->collidesWithItem(crashGrafico);
 
     bool golpeBarrera =barreraGrafica->collidesWithItem(crashGrafico);
+
+    piezaGrafica1->setVisible(!nivel1.pieza1Recogida());
+    piezaGrafica2->setVisible(!nivel1.pieza2Recogida());
+    piezaGrafica3->setVisible(!nivel1.pieza3Recogida());
+
+
+
+    maquinaGrafica->setPos(nivel1.getMaquinaX() * escala,sueloY + nivel1.getMaquinaY() * escala - 50);
+
+    QGraphicsTextItem *maquinaTexto =escena.addText("MAQUINA");
+
+    maquinaTexto->setDefaultTextColor(QColor("#233754"));
+    maquinaTexto->setFont(QFont("Arial", 10, QFont::Bold));
+
+    maquinaTexto->setPos(nivel1.getMaquinaX() * escala - 8, sueloY + nivel1.getMaquinaY() * escala - 75);
+
+    piezasTexto->setPlainText(QString("PIEZAS: %1/3")
+    .arg(nivel1.getPiezasRecolectadas()) );
+
 
     if (golpeResiduo || golpeBarrera)
     {
@@ -116,6 +211,13 @@ int main(int argc, char *argv[])
     mensaje->setFont(QFont("Arial", 28, QFont::Bold));
     mensaje->setPos(205, 140);}
     });
+
+    if (nivel1.estaCompletado())
+    {
+        victoriaTexto->setVisible(true);
+        temporizador.stop();
+    }
+
     temporizador.start();
 
 

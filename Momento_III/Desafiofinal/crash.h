@@ -1,6 +1,7 @@
 #ifndef CRASH_H
 #define CRASH_H
 
+#include <vector>
 #include "plataforma.h"
 
 class Crash
@@ -35,6 +36,7 @@ public:
     void reiniciarPosicion();
     bool estaVivo() const;
     void limitarMovimiento(double minimoX, double maximoX);
+    void actualizarFisicaNivel( double tiempo,const std::vector<Plataforma>& plataformas );
 
 };
 

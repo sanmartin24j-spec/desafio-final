@@ -1,5 +1,6 @@
 #include "nivelrio.h"
 #include <iostream>
+#include <cmath>
 
 NivelRio::NivelRio()
     : Nivel("PTAR San Fernando", 1),
@@ -11,7 +12,9 @@ NivelRio::NivelRio()
     pieza1(2, 0),
     pieza2(4, 0),
     pieza3(6, 0),
-    piezasRecolectadas(0)
+    piezasRecolectadas(0),
+    maquinaX(15),
+    maquinaY(-6)
 {}
 void NivelRio::iniciar()
 {
@@ -86,8 +89,8 @@ void NivelRio::recogerPiezas()
 
     if (piezasRecolectadas == 3)
     {
-        completado = true;
-        std::cout << "NIVEL COMPLETADO" << std::endl;
+        std::cout << "Todas las piezas recolectadas" << std::endl;
+        std::cout << "Dirigete a la maquina central" << std::endl;
     }
 }
 double NivelRio::getBarreraX() const
@@ -136,4 +139,64 @@ void NivelRio::recibirGolpe(bool golpeDeResiduo)
     {
         std::cout << "GAME OVER" << std::endl;
     }
+}
+
+int NivelRio::getPiezasRecolectadas() const
+{
+    return piezasRecolectadas;
+}
+
+bool NivelRio::pieza1Recogida() const
+{
+    return pieza1.estaRecogida();
+}
+
+bool NivelRio::pieza2Recogida() const
+{
+    return pieza2.estaRecogida();
+}
+
+bool NivelRio::pieza3Recogida() const
+{
+    return pieza3.estaRecogida();
+}
+
+bool NivelRio::activarMaquina(bool cercaDeMaquina)
+{
+    if (!crash.estaVivo() || completado)
+    {
+        return false;
+    }
+
+    if (piezasRecolectadas < 3)
+    {
+        std::cout << "Faltan piezas para reparar la planta"
+                  << std::endl;
+        return false;
+    }
+
+    if (cercaDeMaquina)
+    {
+        completado = true;
+
+        std::cout << "PLANTA REPARADA" << std::endl;
+        std::cout << "NIVEL 1 COMPLETADO" << std::endl;
+
+        return true;
+    }
+
+    std::cout << "Acercate a la maquina central"
+              << std::endl;
+
+    return false;
+}
+
+double NivelRio::getMaquinaX() const
+{
+    return maquinaX;
+}
+
+double NivelRio::getMaquinaY() const
+{
+    return maquinaY;
 }

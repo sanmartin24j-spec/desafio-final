@@ -1,6 +1,6 @@
 #include "crash.h"
 #include <iostream>
-
+#include <cmath>
 using namespace std;
 
 Crash::Crash()
@@ -181,5 +181,66 @@ void Crash::limitarMovimiento(double minimoX, double maximoX)
     else if (movimientoX > maximoX)
     {
         movimientoX = maximoX;
+    }
+}
+
+void Crash::actualizarFisicaNivel(
+    double tiempo,
+    const std::vector<Plataforma>& plataformas)
+{
+
+    if (enSuelo)
+    {
+        bool tieneApoyo = false;
+
+        for (const Plataforma& plataforma : plataformas)
+        {
+            bool dentroX =
+                movimientoX >= plataforma.getX() &&
+                movimientoX <= plataforma.getX() +
+                                   plataforma.getAncho();
+
+            bool mismaAltura =
+                std::abs(movimientoY - plataforma.getY()) < 0.0001;
+
+            if (dentroX && mismaAltura)
+            {
+                tieneApoyo = true;
+                break;
+            }
+        }
+
+        if (!tieneApoyo)
+        {
+            enSuelo = false;
+        }
+    }
+
+
+    if (!enSuelo)
+    {
+        double posicionAnteriorY = movimientoY;
+
+        actualizarPosicion(tiempo);
+        actualizarvelocidad(tiempo);
+
+
+        if (velocidadVertical >= 0)
+        {
+            for (const Plataforma& plataforma : plataformas)
+            {
+                bool dentroX =movimientoX >= plataforma.getX() &&movimientoX <= plataforma.getX() +plataforma.getAncho();
+
+                bool cruzoSuperficie =posicionAnteriorY <= plataforma.getY() &&movimientoY >= plataforma.getY();
+
+                if (dentroX && cruzoSuperficie)
+                {
+                    movimientoY = plataforma.getY();
+                    velocidadVertical = 0;
+                    enSuelo = true;
+                    break;
+                }
+            }
+        }
     }
 }

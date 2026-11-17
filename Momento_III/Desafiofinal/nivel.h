@@ -19,6 +19,7 @@ public:
     virtual void actualizar(double tiempo) = 0;
 
     bool estaCompletado() const;
+
 };
 
 #endif // NIVEL_H
