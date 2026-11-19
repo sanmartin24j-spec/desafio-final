@@ -8,10 +8,11 @@ NivelRio::NivelRio()
     crash(),
     plataforma1(0, -3, 10, 1),
     barrera(10, -2, 5, 1),
+    barreraSuperior(8, -9, 2, 2),
     residuo1(5, -20, 10),
     pieza1(2, 0),
-    pieza2(4, 0),
-    pieza3(6, 0),
+    pieza2(6, -3),
+    pieza3(8, -9),
     piezasRecolectadas(0),
     maquinaX(15),
     maquinaY(-6)
@@ -103,6 +104,16 @@ double NivelRio::getBarreraY() const
     return barrera.getY();
 }
 
+double NivelRio::getBarreraSuperiorX() const
+{
+    return barreraSuperior.getX();
+}
+
+double NivelRio::getBarreraSuperiorY() const
+{
+    return barreraSuperior.getY();
+}
+
 double NivelRio::getResiduoX() const
 {
     return residuo1.getX();
@@ -118,7 +129,9 @@ void NivelRio::actualizarPeligros(double tiempo)
     tiempoTranscurrido += tiempo;
 
     barrera.actualizarMovimiento(tiempoTranscurrido);
+    barreraSuperior.actualizarMovimiento(tiempoTranscurrido);
     residuo1.actualizar(tiempo);
+
 }
 
 void NivelRio::recibirGolpe(bool golpeDeResiduo)
@@ -200,3 +213,4 @@ double NivelRio::getMaquinaY() const
 {
     return maquinaY;
 }
+

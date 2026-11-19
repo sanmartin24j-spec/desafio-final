@@ -8,6 +8,7 @@
 #include "residuo.h"
 #include "pieza.h"
 
+
 class NivelRio : public Nivel
 {
 private:
@@ -16,6 +17,7 @@ private:
     Crash crash;
     Plataforma plataforma1;
     Obstaculo barrera;
+    Obstaculo barreraSuperior;
     Residuo residuo1;
     Pieza pieza1;
     Pieza pieza2;
@@ -23,6 +25,7 @@ private:
     int piezasRecolectadas;
     double maquinaX;
     double maquinaY;
+
 
 
 public:
@@ -35,6 +38,9 @@ public:
     Crash& getCrash();
     double getBarreraX() const;
     double getBarreraY() const;
+
+    double getBarreraSuperiorX() const;
+    double getBarreraSuperiorY() const;
 
     double getResiduoX() const;
     double getResiduoY() const;

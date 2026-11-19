@@ -114,6 +114,7 @@ int main(int argc, char *argv[])
     vista.setFocus();
     QGraphicsRectItem *barreraGrafica = escena.addRect(0, 0, 30, 50,QPen(Qt::NoPen),QBrush(QColor("#D62828")));
 
+    QGraphicsRectItem *barreraSuperiorGrafica =escena.addRect(0, 0, 30, 50,QPen(Qt::NoPen),QBrush(QColor("#B91C1C")));
 
     QGraphicsEllipseItem *residuoGrafico = escena.addEllipse(0, 0, 18, 18,QPen(Qt::NoPen),QBrush(QColor("#8B5E3C")) );
 
@@ -124,9 +125,11 @@ int main(int argc, char *argv[])
     QGraphicsEllipseItem *piezaGrafica3 = escena.addEllipse(0, 0, 16, 16,QPen(Qt::NoPen), QBrush(QColor("#FFD700")));
 
     // Las mismas posiciones definidas en NivelRio
-    piezaGrafica1->setPos(2 * escala, sueloY - 16);
-    piezaGrafica2->setPos(4 * escala, sueloY - 16);
-    piezaGrafica3->setPos(6 * escala, sueloY - 16);
+    piezaGrafica1->setPos(2 * escala,sueloY - 16);
+
+    piezaGrafica2->setPos(6 * escala,sueloY - 3 * escala - 16);
+
+    piezaGrafica3->setPos(8 * escala,sueloY - 9 * escala - 16);
 
     QTimer temporizador;
     temporizador.setInterval(50);
@@ -165,11 +168,15 @@ int main(int argc, char *argv[])
 
     barreraGrafica->setPos(nivel1.getBarreraX() * escala,sueloY + nivel1.getBarreraY() * escala - 50);
 
+    barreraSuperiorGrafica->setPos(nivel1.getBarreraSuperiorX() * escala,sueloY + nivel1.getBarreraSuperiorY() * escala - 50);
+
     residuoGrafico->setPos(nivel1.getResiduoX() * escala,sueloY + nivel1.getResiduoY() * escala - 18);
 
     bool golpeResiduo =residuoGrafico->collidesWithItem(crashGrafico);
 
     bool golpeBarrera =barreraGrafica->collidesWithItem(crashGrafico);
+
+    bool golpeBarreraSuperior =barreraSuperiorGrafica->collidesWithItem(crashGrafico);
 
     piezaGrafica1->setVisible(!nivel1.pieza1Recogida());
     piezaGrafica2->setVisible(!nivel1.pieza2Recogida());
@@ -190,7 +197,7 @@ int main(int argc, char *argv[])
     .arg(nivel1.getPiezasRecolectadas()) );
 
 
-    if (golpeResiduo || golpeBarrera)
+    if (golpeResiduo || golpeBarrera || golpeBarreraSuperior)
     {
     nivel1.recibirGolpe(golpeResiduo);
 
