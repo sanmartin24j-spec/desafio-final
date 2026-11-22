@@ -16,6 +16,7 @@ private:
 
 public:
     Crash();
+    //San Fer
     void movimientoderecha(int num);
     void movimientoizquierda(int num);
     void subir (int num);
@@ -37,6 +38,17 @@ public:
     bool estaVivo() const;
     void limitarMovimiento(double minimoX, double maximoX);
     void actualizarFisicaNivel( double tiempo,const std::vector<Plataforma>& plataformas );
+
+    //Aguas Claras
+
+    void moverArriba(double distancia);
+    void moverAbajo(double distancia);
+    void limitarMovimientoCenital(
+    double minimoX,
+    double maximoX,
+    double minimoY,
+    double maximoY
+    );
 
 };
 

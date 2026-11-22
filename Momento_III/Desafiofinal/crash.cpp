@@ -244,3 +244,40 @@ void Crash::actualizarFisicaNivel(
         }
     }
 }
+
+//Aguas claras
+
+void Crash::moverArriba(double distancia)
+{
+    movimientoY -= distancia;
+}
+
+void Crash::moverAbajo(double distancia)
+{
+    movimientoY += distancia;
+}
+
+void Crash::limitarMovimientoCenital(
+    double minimoX,
+    double maximoX,
+    double minimoY,
+    double maximoY)
+{
+    if (movimientoX < minimoX)
+    {
+        movimientoX = minimoX;
+    }
+    else if (movimientoX > maximoX)
+    {
+        movimientoX = maximoX;
+    }
+
+    if (movimientoY < minimoY)
+    {
+        movimientoY = minimoY;
+    }
+    else if (movimientoY > maximoY)
+    {
+        movimientoY = maximoY;
+    }
+}

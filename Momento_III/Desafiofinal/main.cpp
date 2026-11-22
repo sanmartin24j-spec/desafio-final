@@ -15,12 +15,29 @@
 #include <QGraphicsEllipseItem>
 #include <iostream>
 #include <QDebug>
+#include "ventanaaguasclaras.h"
 
 #include "crash.h"
 #include "plataforma.h"
 
+
+int probarAguasClaras()
+{
+    int argc = 1;
+    char nombrePrograma[] = "Desafiofinal";
+    char* argv[] = {nombrePrograma, nullptr};
+
+    QApplication aplicacion(argc, argv);
+
+    VentanaAguasClaras ventana;
+    ventana.show();
+
+    return aplicacion.exec();
+}
+
 int main(int argc, char *argv[])
 {
+    return probarAguasClaras();
     QApplication aplicacion(argc, argv);
 
     NivelRio nivel1;
