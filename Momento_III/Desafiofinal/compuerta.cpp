@@ -41,3 +41,8 @@ bool Compuerta::estaAbierta() const
 {
     return abierta;
 }
+
+void Compuerta::reiniciar()
+{
+    abierta = false;
+}

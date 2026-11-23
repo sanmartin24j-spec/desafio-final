@@ -19,8 +19,6 @@ public:
     void iniciar() override;
     void actualizar(double tiempo) override;
 
-    bool abrirCompuerta();
-
     double getTiempoRestante() const;
     int getCompuertasAbiertas() const;
 

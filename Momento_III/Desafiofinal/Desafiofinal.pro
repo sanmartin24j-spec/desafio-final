@@ -6,6 +6,7 @@ CONFIG -= app_bundle
 QT += core gui widgets
 
 SOURCES += \
+        agenteautonomo.cpp \
         compuerta.cpp \
         crash.cpp \
         main.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
 
 
 HEADERS += \
+    agenteautonomo.h \
     compuerta.h \
     crash.h \
     nivel.h \

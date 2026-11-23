@@ -15,6 +15,10 @@ void NivelAguasClaras::iniciar()
     tiempoRestante = 120.0;
     compuertasAbiertas = 0;
     completado = false;
+
+    compuerta1.reiniciar();
+    compuerta2.reiniciar();
+    compuerta3.reiniciar();
 }
 
 void NivelAguasClaras::actualizar(double tiempo)
@@ -32,27 +36,6 @@ void NivelAguasClaras::actualizar(double tiempo)
     }
 }
 
-bool NivelAguasClaras::abrirCompuerta()
-{
-    if (completado || tiempoRestante <= 0)
-    {
-        return false;
-    }
-
-    if (compuertasAbiertas >= 3)
-    {
-        return false;
-    }
-
-    compuertasAbiertas++;
-
-    if (compuertasAbiertas == 3)
-    {
-        completado = true;
-    }
-
-    return true;
-}
 
 double NivelAguasClaras::getTiempoRestante() const
 {

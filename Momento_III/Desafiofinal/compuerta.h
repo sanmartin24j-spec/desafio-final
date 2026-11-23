@@ -16,5 +16,6 @@ public:
     double getX() const;
     double getY() const;
     bool estaAbierta() const;
+    void reiniciar();
 };
 #endif // COMPUERTA_H

@@ -7,13 +7,25 @@
 #include <QGraphicsTextItem>
 #include <QTimer>
 #include <QKeyEvent>
+#include "agenteautonomo.h"
+#include <vector>
 
 #include "crash.h"
 #include "nivelaguasclaras.h"
 
+struct ResiduoNivel
+{
+    double x;
+    double y;
+    bool disponible;
+    QGraphicsEllipseItem* grafico;
+};
+
 class VentanaAguasClaras : public QGraphicsView
 {
 private:
+
+
     QGraphicsScene escena;
     QGraphicsRectItem* crashGrafico;
     QGraphicsTextItem* tiempoTexto;
@@ -33,6 +45,21 @@ private:
     NivelAguasClaras nivel;
 
     void actualizarJuego();
+
+    AgenteAutonomo agente;
+
+    QGraphicsEllipseItem* agenteGrafico;
+
+
+    QGraphicsTextItem* agenteTexto;
+
+
+
+    std::vector<ResiduoNivel> residuos;
+    int indiceObjetivo;
+
+    int buscarResiduoMasCercano() const;
+
 
 protected:
     void keyPressEvent(QKeyEvent* evento) override;
