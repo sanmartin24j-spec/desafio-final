@@ -37,7 +37,7 @@ int probarAguasClaras()
 
 int main(int argc, char *argv[])
 {
-    return probarAguasClaras();
+
     QApplication aplicacion(argc, argv);
 
     NivelRio nivel1;
@@ -58,18 +58,6 @@ int main(int argc, char *argv[])
 
     const double escala = 20.0;
     const double sueloY = 300.0;
-
-    for (const Plataforma& plataforma : plataformas)
-    {
-        escena.addRect(
-            plataforma.getX() * escala,
-            sueloY + plataforma.getY() * escala,
-            plataforma.getAncho() * escala,
-            plataforma.getAlto() * escala,
-            QPen(Qt::NoPen),
-            QBrush(QColor("#16A085"))
-            );
-    }
 
 
     for (const Plataforma& plataforma : plataformas)
@@ -148,16 +136,46 @@ int main(int argc, char *argv[])
 
     piezaGrafica3->setPos(8 * escala,sueloY - 9 * escala - 16);
 
+    QGraphicsTextItem *maquinaTexto =escena.addText("MAQUINA");
+
+    maquinaTexto->setDefaultTextColor(QColor("#233754"));
+    maquinaTexto->setFont(QFont("Arial", 10, QFont::Bold));
+
+    maquinaTexto->setPos(nivel1.getMaquinaX() * escala - 8, sueloY + nivel1.getMaquinaY() * escala - 75);
+
+    piezasTexto->setPlainText(QString("PIEZAS: %1/3").arg(nivel1.getPiezasRecolectadas()) );
+
+
     QTimer temporizador;
     temporizador.setInterval(50);
 
     QObject::connect(&temporizador, &QTimer::timeout,[&]()
     {
-    if (nivel1.estaCompletado() || !crash.estaVivo())
-    {
-        temporizador.stop();
-        return;
-    }
+        if (nivel1.estaCompletado())
+        {
+            temporizador.stop();
+
+
+            VentanaAguasClaras* nivel2 = new VentanaAguasClaras();
+
+
+            nivel2->setAttribute(Qt::WA_DeleteOnClose);
+
+
+            nivel2->show();
+            nivel2->setFocus();
+
+
+            vista.hide();
+
+            return;
+        }
+
+        if (!crash.estaVivo())
+        {
+            temporizador.stop();
+            return;
+        }
 
     crash.limitarMovimiento(0, (640.0 - 24.0) / escala);
     crash.actualizarFisicaNivel(0.05, plataformas);
@@ -171,12 +189,6 @@ int main(int argc, char *argv[])
         std::cout << "Vidas restantes: "
                   << crash.getVidas() << std::endl;
     }
-
-    if (crash.getY() > 6 && crash.estaVivo())
-    {
-        nivel1.recibirGolpe(false);
-    }
-
 
     nivel1.actualizarPeligros(0.05);
 
@@ -200,18 +212,7 @@ int main(int argc, char *argv[])
     piezaGrafica3->setVisible(!nivel1.pieza3Recogida());
 
 
-
     maquinaGrafica->setPos(nivel1.getMaquinaX() * escala,sueloY + nivel1.getMaquinaY() * escala - 50);
-
-    QGraphicsTextItem *maquinaTexto =escena.addText("MAQUINA");
-
-    maquinaTexto->setDefaultTextColor(QColor("#233754"));
-    maquinaTexto->setFont(QFont("Arial", 10, QFont::Bold));
-
-    maquinaTexto->setPos(nivel1.getMaquinaX() * escala - 8, sueloY + nivel1.getMaquinaY() * escala - 75);
-
-    piezasTexto->setPlainText(QString("PIEZAS: %1/3")
-    .arg(nivel1.getPiezasRecolectadas()) );
 
 
     if (golpeResiduo || golpeBarrera || golpeBarreraSuperior)
@@ -236,11 +237,6 @@ int main(int argc, char *argv[])
     mensaje->setPos(205, 140);}
     });
 
-    if (nivel1.estaCompletado())
-    {
-        victoriaTexto->setVisible(true);
-        temporizador.stop();
-    }
 
     temporizador.start();
 
