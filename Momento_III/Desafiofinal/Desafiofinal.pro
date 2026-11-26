@@ -34,3 +34,6 @@ HEADERS += \
     residuo.h \
     ventanaaguasclaras.h \
     ventanajuego.h
+
+RESOURCES += \
+    recursos.qrc

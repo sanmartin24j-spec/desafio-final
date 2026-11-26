@@ -16,7 +16,9 @@
 #include <iostream>
 #include <QDebug>
 #include "ventanaaguasclaras.h"
-
+#include <QPixmap>
+#include <QGraphicsPixmapItem>
+#include <QDebug>
 #include "crash.h"
 #include "plataforma.h"
 
@@ -52,9 +54,26 @@ int main(int argc, char *argv[])
         Plataforma(5, -9, 7, 1)
     };
 
+    //ventana y fondo
     QGraphicsScene escena;
     escena.setSceneRect(0, 0, 640, 360);
     escena.setBackgroundBrush(QColor("#DDF3FF"));
+
+    QPixmap fondo(":/imagenes/fondo_sanfernando.png");
+
+    if (fondo.isNull())
+    {
+        qDebug() << "ERROR: no se cargo el fondo";
+    }
+    else
+    {
+        QGraphicsPixmapItem* fondoGrafico = escena.addPixmap(
+        fondo.scaled(640,360,Qt::IgnoreAspectRatio,Qt::SmoothTransformation)
+            );
+
+        fondoGrafico->setPos(0, 0);
+        fondoGrafico->setZValue(-100);
+    }
 
     const double escala = 20.0;
     const double sueloY = 300.0;
@@ -72,7 +91,34 @@ int main(int argc, char *argv[])
             );
     }
 
+
+    //zorro
     QGraphicsRectItem *crashGrafico = escena.addRect(0, 0, 24, 32,QPen(Qt::NoPen),QBrush(QColor("#F28C28")));
+
+
+    crashGrafico->setPen(QPen(Qt::NoPen));
+    crashGrafico->setBrush(QBrush(Qt::NoBrush));
+
+
+    QPixmap imagenCrash(":/imagenes/Recursos/Crashstatico.png");
+
+    QGraphicsPixmapItem* spriteCrash = nullptr;
+
+    if (imagenCrash.isNull())
+    {
+        qDebug() << "ERROR: No se pudo cargar Crashstatico.png";
+
+        // en caso de fallo
+        crashGrafico->setBrush(QBrush(QColor("#F28C28")));
+    }
+    else
+    {
+        spriteCrash = escena.addPixmap(imagenCrash.scaled(36, 44,
+        Qt::IgnoreAspectRatio,Qt::SmoothTransformation)
+        );
+
+        spriteCrash->setZValue(10);
+    }
 
 
     crashGrafico->setPos(crash.getX() * escala,sueloY + crash.getY() * escala - 32);
@@ -194,6 +240,11 @@ int main(int argc, char *argv[])
 
 
     crashGrafico->setPos(crash.getX() * escala,sueloY + crash.getY() * escala - 32);
+    if (spriteCrash != nullptr)
+    {
+        spriteCrash->setPos(crash.getX() * escala - 6,
+        sueloY + crash.getY() * escala - 44);
+    }
 
     barreraGrafica->setPos(nivel1.getBarreraX() * escala,sueloY + nivel1.getBarreraY() * escala - 50);
 
@@ -223,6 +274,12 @@ int main(int argc, char *argv[])
 
     residuoGrafico->setPos(nivel1.getResiduoX() * escala,sueloY + nivel1.getResiduoY() * escala - 18);
     }
+    //return to the origin
+    if (spriteCrash != nullptr)
+    {
+    spriteCrash->setPos(crash.getX() * escala - 6,sueloY + crash.getY() * escala - 44);
+    }
+
 
     vidasTexto->setPlainText(QString("VIDAS: %1").arg(crash.getVidas()));
 

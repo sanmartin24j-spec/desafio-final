@@ -13,6 +13,8 @@
 #include "crash.h"
 #include "nivelaguasclaras.h"
 
+#include <QGraphicsPixmapItem>
+
 struct ResiduoNivel
 {
     double x;
@@ -28,6 +30,7 @@ private:
 
     QGraphicsScene escena;
     QGraphicsRectItem* crashGrafico;
+    QGraphicsPixmapItem* spriteCrash;
     QGraphicsTextItem* tiempoTexto;
 
     QGraphicsRectItem* compuertaGrafica1;
@@ -49,6 +52,7 @@ private:
     AgenteAutonomo agente;
 
     QGraphicsEllipseItem* agenteGrafico;
+    QGraphicsPixmapItem* spriteRobot;
 
 
     QGraphicsTextItem* agenteTexto;

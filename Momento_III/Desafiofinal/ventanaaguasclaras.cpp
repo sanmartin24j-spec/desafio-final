@@ -6,11 +6,16 @@
 #include <QString>
 #include <QFont>
 #include <cmath>
+#include <QPixmap>
+#include <QGraphicsPixmapItem>
+#include <QDebug>
 
 
 
 VentanaAguasClaras::VentanaAguasClaras()
+
     : QGraphicsView(),
+
     escena(0, 0, 640, 400),
     crashGrafico(nullptr),
     tiempoTexto(nullptr),
@@ -18,6 +23,7 @@ VentanaAguasClaras::VentanaAguasClaras()
     agenteGrafico(nullptr),
     agenteTexto(nullptr),
     indiceObjetivo(-1)
+
 
 
 {
@@ -30,9 +36,58 @@ VentanaAguasClaras::VentanaAguasClaras()
 
 
     escena.setBackgroundBrush(QColor("#D6F0F5"));
+    QPixmap fondo(":/imagenes/Recursos/fondo_aguasclaras.png");
+
+    if (fondo.isNull())
+    {
+        qDebug() << "ERROR: No se pudo cargar el fondo de Aguas Claras";
+    }
+    else
+    {
+        QGraphicsPixmapItem* fondoGrafico = escena.addPixmap(
+            fondo.scaled(
+                640, 400,
+                Qt::IgnoreAspectRatio,
+                Qt::SmoothTransformation
+                )
+            );
+
+        fondoGrafico->setPos(0, 0);
+        fondoGrafico->setZValue(-100);
+    }
 
 
     crashGrafico = escena.addRect(0, 0, 24, 32,QPen(Qt::NoPen),QBrush(QColor("#F97316")));
+    // El rectan invisible
+    crashGrafico->setBrush(QBrush(Qt::NoBrush));
+    crashGrafico->setPen(QPen(Qt::NoPen));
+
+    // Zorro
+    QPixmap imagenCrash(":/imagenes/Recursos/Crashstatico.png");
+
+    spriteCrash = nullptr;
+
+    if (!imagenCrash.isNull())
+    {
+        spriteCrash = escena.addPixmap(imagenCrash.scaled(36, 44,Qt::IgnoreAspectRatio,
+        Qt::SmoothTransformation));
+
+        spriteCrash->setZValue(10);
+    }
+    else
+    {
+        //rectan
+        crashGrafico->setBrush(QBrush(QColor("#F97316")));
+    }
+
+    if (spriteCrash != nullptr)
+    {
+        spriteCrash->setPos(
+            crash.getX() * 20 - 6,
+            crash.getY() * 20 - 6
+            );
+    }
+
 
 
     compuertaGrafica1 = escena.addRect(0, 0, 34, 34,QPen(Qt::NoPen),QBrush(QColor("#DC2626")));
@@ -45,6 +100,39 @@ VentanaAguasClaras::VentanaAguasClaras()
     agenteGrafico = escena.addEllipse(0, 0, 24, 24,QPen(Qt::NoPen),QBrush(QColor("#2563EB")));
 
     agenteGrafico->setPos(agente.getX() * 20,agente.getY() * 20);
+
+
+
+    agenteGrafico->setBrush(QBrush(Qt::NoBrush));
+    agenteGrafico->setPen(QPen(Qt::NoPen));
+
+    QPixmap imagenRobot(":/imagenes/Recursos/robot.png");
+
+    spriteRobot = nullptr;
+
+    if (!imagenRobot.isNull())
+    {
+        spriteRobot = escena.addPixmap(
+            imagenRobot.scaled(
+                32, 32,
+                Qt::KeepAspectRatio,
+                Qt::SmoothTransformation
+                )
+            );
+
+        spriteRobot->setZValue(10);
+    }
+    else
+    {
+        agenteGrafico->setBrush(QBrush(QColor("#2563EB")));
+    }
+    if (spriteRobot != nullptr)
+    {
+        spriteRobot->setPos(
+            agente.getX() * 20 - 4,
+            agente.getY() * 20 - 4
+            );
+    }
 
     residuos.push_back({20, 12, true, nullptr});
     residuos.push_back({8, 5, true, nullptr});
@@ -195,6 +283,14 @@ void VentanaAguasClaras::keyPressEvent(QKeyEvent* evento)
         crash.getX() * 20,
         crash.getY() * 20
         );
+
+    if (spriteCrash != nullptr)
+    {
+        spriteCrash->setPos(
+            crash.getX() * 20 - 6,
+            crash.getY() * 20 - 6
+            );
+    }
 }
 
 void VentanaAguasClaras::actualizarJuego()
@@ -221,6 +317,13 @@ void VentanaAguasClaras::actualizarJuego()
         agenteGrafico->setPos(agente.getX() * 20,agente.getY() * 20
             );
     }
+    if (spriteRobot != nullptr)
+    {
+        spriteRobot->setPos(
+            agente.getX() * 20 - 4,
+            agente.getY() * 20 - 4
+            );
+    }
 
     if (indiceObjetivo != -1)
     {
@@ -228,6 +331,14 @@ void VentanaAguasClaras::actualizarJuego()
         agente.actuar(0.05);
 
         agenteGrafico->setPos(agente.getX() * 20,agente.getY() * 20);
+
+        if (spriteRobot != nullptr)
+        {
+            spriteRobot->setPos(
+                agente.getX() * 20 - 4,
+                agente.getY() * 20 - 4
+                );
+        }
 
         // Comprobar si el agente alcanzó el residuo
         double dx = residuos[indiceObjetivo].x - agente.getX();
