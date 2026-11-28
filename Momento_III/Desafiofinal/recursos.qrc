@@ -4,5 +4,12 @@
         <file>../../Recursos/Crashstatico.png</file>
         <file>../../Recursos/fondo_aguasclaras.png</file>
         <file>../../Recursos/robot.png</file>
+        <file>../../Recursos/Crashmovimiento.png</file>
+        <file>../../Recursos/Plataforma.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>../../Sonidos/ambiente_planta.wav</file>
+        <file>../../Sonidos/recibir_dano.wav</file>
+        <file>../../Sonidos/recoger_pieza.wav</file>
     </qresource>
 </RCC>

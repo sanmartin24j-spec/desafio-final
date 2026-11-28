@@ -2,13 +2,23 @@
 #include <iostream>
 #include <cmath>
 
-NivelRio::NivelRio()
+NivelRio::NivelRio(Dificultad dificultad)
     : Nivel("PTAR San Fernando", 1),
     tiempoTranscurrido(0),
     crash(),
     plataforma1(0, -3, 10, 1),
-    barrera(10, -2, 5, 1),
-    barreraSuperior(8, -9, 2, 2),
+
+    barrera(
+    10, -2,
+    dificultad == Dificultad::Dificil ? 5.5 : 5.0,
+    dificultad == Dificultad::Dificil ? 1.6 : 1.0
+    ),
+
+    barreraSuperior(8, -9,
+    dificultad == Dificultad::Dificil ? 3.0 : 2.0,
+    dificultad == Dificultad::Dificil ? 3.2 : 2.0
+    ),
+
     residuo1(5, -20, 10),
     pieza1(2, 0),
     pieza2(6, -3),

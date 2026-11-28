@@ -19,6 +19,7 @@ SOURCES += \
         residuo.cpp \
         ventanaaguasclaras.cpp \
         ventanajuego.cpp
+        QT += multimedia
 
 
 HEADERS += \

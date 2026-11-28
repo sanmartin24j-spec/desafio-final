@@ -29,7 +29,14 @@ private:
 
 
 public:
-    NivelRio();
+    enum class Dificultad
+    {
+        Normal,
+        Dificil
+    };
+
+    explicit NivelRio(
+    Dificultad dificultad = Dificultad::Normal);
 
     void iniciar() override;
     void actualizar(double tiempo) override;

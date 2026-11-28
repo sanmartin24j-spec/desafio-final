@@ -18,9 +18,45 @@
 #include "ventanaaguasclaras.h"
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
-#include <QDebug>
 #include "crash.h"
 #include "plataforma.h"
+#include <QString>
+#include <stdexcept>
+#include <QSoundEffect>
+#include <QUrl>
+#include <QMessageBox>
+
+
+#include <QAbstractButton>
+#include <QPushButton>
+
+
+QPixmap cargarSpriteConRespaldo(
+    const QString& ruta,
+    const QPixmap& spriteBase)
+{
+    try
+    {
+        QPixmap imagen(ruta);
+
+        if (imagen.isNull())
+        {
+            throw std::runtime_error(
+                "No se pudo cargar: " + ruta.toStdString()
+                );
+        }
+
+        return imagen;
+    }
+    catch (const std::exception& error)
+    {
+        qWarning() << "Excepcion:" << error.what();
+        qWarning() << "Se utilizara el sprite base";
+
+        return spriteBase;
+    }
+}
+
 
 
 int probarAguasClaras()
@@ -42,7 +78,53 @@ int main(int argc, char *argv[])
 
     QApplication aplicacion(argc, argv);
 
-    NivelRio nivel1;
+    QMessageBox ventanaDificultad;
+
+    ventanaDificultad.setWindowTitle("Crash - San Fernando");
+    ventanaDificultad.setText("Selecciona la dificultad del juego");
+
+    ventanaDificultad.setInformativeText(
+        "Normal: barreras con movimiento moderado.\n"
+        "Dificil: barreras mas rapidas y mayor amplitud."
+        );
+
+    QAbstractButton* botonNormal =
+        ventanaDificultad.addButton(
+            "Normal",
+            QMessageBox::AcceptRole
+            );
+
+    QAbstractButton* botonDificil =
+        ventanaDificultad.addButton(
+            "Dificil",
+            QMessageBox::AcceptRole
+            );
+
+    ventanaDificultad.setDefaultButton(
+        qobject_cast<QPushButton*>(botonNormal)
+        );
+
+    ventanaDificultad.exec();
+
+    NivelRio::Dificultad dificultadElegida =
+        ventanaDificultad.clickedButton() == botonDificil
+            ? NivelRio::Dificultad::Dificil
+            : NivelRio::Dificultad::Normal;
+
+    QSoundEffect musica;
+    musica.setSource(QUrl("qrc:/Sonidos/ambiente_planta.wav"));
+    musica.setLoopCount(QSoundEffect::Infinite);
+    musica.setVolume(0.15f);
+
+    QSoundEffect sonidoPieza;
+    sonidoPieza.setSource(QUrl("qrc:/Sonidos/recoger_pieza.wav"));
+    sonidoPieza.setVolume(0.55f);
+
+    QSoundEffect sonidoGolpe;
+    sonidoGolpe.setSource(QUrl("qrc:/Sonidos/recibir_dano.wav"));
+    sonidoGolpe.setVolume(0.55f);
+
+    NivelRio nivel1(dificultadElegida);
     nivel1.iniciar();
 
     Crash& crash = nivel1.getCrash();
@@ -78,17 +160,47 @@ int main(int argc, char *argv[])
     const double escala = 20.0;
     const double sueloY = 300.0;
 
+    QPixmap imagenPlataforma(":/imagenes/Recursos/Plataforma.png");
 
     for (const Plataforma& plataforma : plataformas)
     {
-        escena.addRect(
-            plataforma.getX() * escala,
-            sueloY + plataforma.getY() * escala,
-            plataforma.getAncho() * escala,
-            plataforma.getAlto() * escala,
-            QPen(Qt::NoPen),
-            QBrush(QColor("#16A085"))
-            );
+        double x = plataforma.getX() * escala;
+        double y = sueloY + plataforma.getY() * escala;
+
+        double ancho = plataforma.getAncho() * escala;
+        double alto = plataforma.getAlto() * escala;
+
+        if (!imagenPlataforma.isNull())
+        {
+            const int grosorVisual = 80;
+
+            QGraphicsPixmapItem* grafico = escena.addPixmap(
+                imagenPlataforma.scaled(
+                    static_cast<int>(ancho),
+                    grosorVisual,
+                    Qt::IgnoreAspectRatio,
+                    Qt::SmoothTransformation
+                    )
+                );
+
+
+            const int ajusteVisualY = 30;
+
+            grafico->setPos(
+                x,
+                y - ajusteVisualY
+                );
+
+            grafico->setZValue(1);
+        }
+        else
+        {
+            escena.addRect(
+                x, y, ancho, alto,
+                QPen(Qt::NoPen),
+                QBrush(QColor("#16A085"))
+                );
+        }
     }
 
 
@@ -119,6 +231,16 @@ int main(int argc, char *argv[])
 
         spriteCrash->setZValue(10);
     }
+
+    QPixmap imagenCaminar = cargarSpriteConRespaldo(
+        ":/imagenes/Crashmovimiento.png",
+        imagenCrash
+        );
+
+    QPixmap imagenSaltar = cargarSpriteConRespaldo(
+        ":/imagenes/Recursos/Crashsalto.png",
+        imagenCrash
+        );
 
 
     crashGrafico->setPos(crash.getX() * escala,sueloY + crash.getY() * escala - 32);
@@ -162,6 +284,7 @@ int main(int argc, char *argv[])
     vista.setRenderHint(QPainter::Antialiasing);
     vista.setFixedSize(660, 380);
     vista.show();
+    musica.play();
     vista.setFocus();
     QGraphicsRectItem *barreraGrafica = escena.addRect(0, 0, 30, 50,QPen(Qt::NoPen),QBrush(QColor("#D62828")));
 
@@ -191,6 +314,8 @@ int main(int argc, char *argv[])
 
     piezasTexto->setPlainText(QString("PIEZAS: %1/3").arg(nivel1.getPiezasRecolectadas()) );
 
+    int piezasAnteriores = nivel1.getPiezasRecolectadas();
+    int vidasAnteriores = crash.getVidas();
 
     QTimer temporizador;
     temporizador.setInterval(50);
@@ -200,7 +325,7 @@ int main(int argc, char *argv[])
         if (nivel1.estaCompletado())
         {
             temporizador.stop();
-
+            musica.stop();
 
             VentanaAguasClaras* nivel2 = new VentanaAguasClaras();
 
@@ -280,13 +405,28 @@ int main(int argc, char *argv[])
     spriteCrash->setPos(crash.getX() * escala - 6,sueloY + crash.getY() * escala - 44);
     }
 
+    if (nivel1.getPiezasRecolectadas() > piezasAnteriores)
+    {
+        sonidoPieza.play();
+    }
+
+    piezasAnteriores = nivel1.getPiezasRecolectadas();
+
+
+    if (crash.getVidas() < vidasAnteriores)
+    {
+        sonidoGolpe.play();
+    }
+
+    vidasAnteriores = crash.getVidas();
+
 
     vidasTexto->setPlainText(QString("VIDAS: %1").arg(crash.getVidas()));
 
     if (!crash.estaVivo())
     {
     temporizador.stop();
-
+    musica.stop();
     QGraphicsTextItem *mensaje = escena.addText("GAME OVER");
 
     mensaje->setDefaultTextColor(QColor("#D62828"));
